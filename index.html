@@ -68,8 +68,9 @@
             padding: 12mm; 
             box-sizing: border-box;
             position: relative;
-            display: flex;
-            flex-direction: column;
+            /* Switched to CSS Grid for robust page layout */
+            display: grid;
+            grid-template-rows: auto 1fr auto; /* Header, Content (stretches), Footer */
             height: 297mm; /* A4 height */
         }
         .admit-card-page { border: 1.5px solid var(--primary-blue); }
@@ -83,7 +84,7 @@
         .admit-header {
             display: flex; align-items: center; gap: 15px;
             padding-bottom: 10px; border-bottom: 2px solid var(--border-color);
-            position: relative; z-index: 1; flex-shrink: 0;
+            position: relative; z-index: 1;
         }
         .logo-admit { width: 80px; height: 80px; flex-shrink: 0; }
         .header-text { text-align: left; }
@@ -93,12 +94,16 @@
         .header-text .sub-line2 { color: #006400; font-size: 16px; font-weight: 700; }
         .header-text .sub-line3 { color: #8B0000; font-size: 15px; font-weight: 500; }
         
-        .page-content { flex-grow: 1; display: flex; flex-direction: column; position: relative; z-index: 1;}
+        .page-content { position: relative; z-index: 1;}
 
         .student-info-container { display: flex; align-items: flex-start; gap: 15px; margin-top: 15px;}
         .details-section { flex: 1; min-width: 0; }
         .student-details-table { border-collapse: collapse; width: 100%; font-size: 14px; }
-        .student-details-table td { padding: 7px 5px; vertical-align: top; }
+        .student-details-table td { 
+            /* Increased padding for more line space */
+            padding: 11px 5px; 
+            vertical-align: top; 
+        }
         .student-details-table td:first-child { font-weight: 700; color: var(--primary-blue); width: 130px; }
         .student-details-table .student-data { font-weight: 700; color: var(--text-color); }
         .student-details-table .student-data.highlight { font-size: 1.1em; }
@@ -118,10 +123,12 @@
         .exam-schedule th { background-color: var(--primary-blue); color: white; font-weight: 600; text-align: center; }
         .signature-box { height: 35px; }
 
+        .page-footer {
+            position: relative; z-index: 1;
+        }
         .admit-footer {
             display: flex; justify-content: space-between; align-items: flex-end;
-            padding-top: 15px; margin-top: auto; border-top: 1px solid var(--border-color);
-            position: relative; z-index: 1; flex-shrink: 0;
+            padding-top: 15px; border-top: 1px solid var(--border-color);
         }
         .signature-area { text-align: center; font-size: 14px; color: var(--text-color); font-weight: 500; width: 220px; }
         .signature-area .signature-image { height: 45px; margin-bottom: -5px; object-fit: contain; }
@@ -129,10 +136,9 @@
         
         .download-info-container { 
             width: 100%; text-align: center; margin-top: 15px; font-size: 10px; color: #555; 
-            position: relative; z-index: 1; flex-shrink: 0;
         }
         
-        .instructions-page { justify-content: space-between; }
+        .instructions-page { grid-template-rows: auto 1fr auto; }
         .instructions-page h3 { text-align: center; color: var(--primary-blue); font-size: 20px; margin-bottom: 15px; }
         .instructions-page ol { line-height: 1.8; font-size: 14px; color: var(--danger-red); padding-left: 20px; text-align: justify;}
         .instructions-page li { margin-bottom: 8px; font-weight: 500; }
@@ -146,7 +152,7 @@
         
         @media (max-width: 900px) {
             .page-container { width: 100%; margin: 10px 0; }
-            .admit-card-page, .instructions-page { height: auto; padding: 15px; }
+            .admit-card-page, .instructions-page { height: auto; padding: 15px; display: block; } /* Revert to block for responsive view */
             .header-text h1 { font-size: 20px; }
             .header-text .sub-line2 { font-size: 15px; }
             .student-details-table { font-size: 13px; }
@@ -164,8 +170,8 @@
             .photo-box { width: 90px; height: 112px; }
             #qrcode { transform: scale(0.85); transform-origin: top center; }
             .student-details-table td:first-child { width: 90px; }
-            .admit-footer { flex-wrap: wrap; justify-content: center; }
-            .signature-area { width: 100%; }
+            .admit-footer { flex-wrap: wrap; justify-content: space-between; }
+            .signature-area { width: auto; }
         }
 
         @media print {
@@ -176,7 +182,10 @@
             body { margin: 0; padding: 0; background: #fff; }
             .login-container, .action-buttons { display: none !important; }
             .page-container { display: block !important; box-shadow: none !important; border: none !important; margin: 0 !important; width: 100% !important; }
-            .admit-card-page, .instructions-page { height: 297mm; }
+            .admit-card-page, .instructions-page { 
+                display: grid !important; /* Ensure grid is used for printing */
+                height: 297mm; 
+            }
             .admit-card-page { border: 1px solid #000 !important; }
             .admit-card-page::before { opacity: 0.1 !important; }
             .download-info-container { display: block !important; }
@@ -386,7 +395,6 @@
                                     <div id="qrcode"></div>
                                 </div>
                             </div>
-
                             <div class="exam-schedule">
                                 <table>
                                     <thead>
@@ -402,23 +410,27 @@
                             </div>
                         </div>
 
-                        <footer class="admit-footer">
-                            <div class="signature-area">
-                                ${signatureBase64 ? `<img src="${signatureBase64}" alt="Student Signature" class="signature-image">` : ''}
-                                <div class="signature-line">Student's Signature</div>
+                        <footer class="page-footer">
+                            <div class="admit-footer">
+                                <div class="signature-area">
+                                    ${signatureBase64 ? `<img src="${signatureBase64}" alt="Student Signature" class="signature-image">` : ''}
+                                    <div class="signature-line">Student's Signature</div>
+                                </div>
+                                <div class="signature-area">
+                                    <img alt="Principal's Signature" class="signature-image" src="${cachedStaticImages.principalSign || 'sign.png'}">
+                                    <div class="signature-line">Principal's Signature</div>
+                                </div>
                             </div>
-                            <div class="signature-area">
-                                <img alt="Principal's Signature" class="signature-image" src="${cachedStaticImages.principalSign || 'sign.png'}">
-                                <div class="signature-line">Principal's Signature</div>
-                            </div>
+                            ${downloadInfoHTML}
                         </footer>
-                        ${downloadInfoHTML}
                     </div>`;
 
                 const instructionsHTML = `
                     <div class="instructions-page print-page-break">
-                        <div class="instructions-content">
+                        <header>
                             <h3>Instructions for Candidates</h3>
+                        </header>
+                        <main>
                             <ol>
                                <li>On all examination days, students must carry their Admit Card. Without the admit card, entry into the examination hall will not be permitted.</li>
                                <li>Students must reach the school at least 15 minutes before the reporting time. Late entry after the seating time will not be allowed.</li>
@@ -429,8 +441,10 @@
                                <li>The admit card must display a clear photograph, student’s signature, and QR code. Admit cards without these will not be accepted.</li>
                                <li>Students must verify all details carefully before printing the admit card. In case of any errors, immediately inform the school administration.</li>
                             </ol>
-                        </div>
-                        ${downloadInfoHTML}
+                        </main>
+                        <footer class="page-footer">
+                            ${downloadInfoHTML}
+                        </footer>
                     </div>`;
 
                 admitCardContentDiv.innerHTML = admitCardHTML + instructionsHTML;
