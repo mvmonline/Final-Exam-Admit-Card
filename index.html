@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MVM Nalbari - Admit Card Download</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
+    <style>
+        :root {
+            --primary-blue: #0A2240; --secondary-blue: #0056b3; --danger-red: #990000;
+            --dark-green: #006400; --text-color: #000000; --text-light: #5f6368;
+            --border-color: #dee2e6; --bg-light: #f8f9fa;
+            --gradient-start: #3f51b5; --gradient-end: #2196f3;
+        }
+        body {
+            font-family: 'Roboto', sans-serif; margin: 0; padding: 20px;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            min-height: 100vh; box-sizing: border-box;
+            background-color: #e9ecef;
+        }
+        .login-container { width: 100%; max-width: 450px; }
+        .login-box {
+            background: #ffffff; padding: 40px 30px; border-radius: 15px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15); text-align: center;
+        }
+        .logo-login { width: 90px; margin-bottom: 20px; }
+        .login-box h2 {
+            font-family: 'Montserrat', sans-serif; color: var(--primary-blue);
+            margin-bottom: 8px; font-size: 24px; font-weight: 700; line-height: 1.3;
+        }
+        .login-box p { color: var(--text-light); margin-bottom: 30px; line-height: 1.6; font-size: 16px; font-weight: 500;}
+        .input-group { position: relative; margin-bottom: 20px; }
+        .input-group i {
+            position: absolute; left: 18px; top: 50%;
+            transform: translateY(-50%); color: #9e9e9e; font-size: 18px;
+        }
+        .login-box input {
+            width: 100%; padding: 16px 15px 16px 50px; border: 1px solid var(--border-color);
+            border-radius: 10px; font-size: 16px; box-sizing: border-box; transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        .login-box input[type="date"] { color: #5f6368; }
+        .login-box input[type="date"]:focus { color: #000000; }
+        .login-box input:focus {
+            box-shadow: 0 0 0 4px rgba(33, 150, 243, 0.2); outline: none; border-color: var(--gradient-end);
+        }
+        .login-box button {
+            width: 100%; background: linear-gradient(45deg, var(--gradient-start), var(--gradient-end)); color: white;
+            padding: 16px; border: none; border-radius: 10px; font-size: 19px; font-weight: bold; cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.3s; letter-spacing: 0.5px;
+            box-shadow: 0 10px 25px rgba(33, 150, 243, 0.4);
+        }
+        .login-box button:hover { transform: translateY(-3px); box-shadow: 0 15px 35px rgba(33, 150, 243, 0.5); }
+        .error-message { color: var(--danger-red); margin-top: 20px; font-weight: 500; height: 20px; font-size: 15px; }
+        .page-container {
+            background: #fff; width: 210mm; box-shadow: 0 10px 50px rgba(0,0,0,0.15);
+            box-sizing: border-box; margin: 20px 0; display: none;
+        }
+        .admit-card-page, .instructions-page {
+            padding: 15mm; box-sizing: border-box; position: relative; background-color: white; z-index: 1;
+        }
+        .admit-card-page { border: 1.5px solid var(--primary-blue); }
+        
+        .admit-card-page::before {
+            content: ''; position: absolute; top: 50%; left: 50%; z-index: -1;
+            transform: translate(-50%, -50%); width: 120mm; height: 120mm;
+            background-image: var(--logo-bg-url); background-repeat: no-repeat;
+            background-position: center; background-size: contain; opacity: 0.12;
+        }
+        .admit-header {
+            display: flex; align-items: center; gap: 20px; padding-bottom: 15px;
+            border-bottom: 2px solid var(--border-color); margin-bottom: 20px;
+        }
+        .logo-admit { width: 90px; height: 90px; flex-shrink: 0; }
+        .header-text { text-align: left; }
+        .header-text h1 {
+            font-family: 'Montserrat', sans-serif; margin: 0; font-size: 26px;
+            font-weight: 800; color: #00008B;
+        }
+        .header-text p { margin: 4px 0 0 0; line-height: 1.4;}
+        .header-text .sub-line1 { color: grey; font-size: 13px; }
+        .header-text .sub-line2 { color: #006400; font-size: 18px; font-weight: 700; }
+        .header-text .sub-line3 { color: #8B0000; font-size: 16px; font-weight: 500; }
+        .student-info-container { display: flex; gap: 20px; flex-wrap: wrap;}
+        .student-details-grid { flex: 2; display: flex; flex-wrap: wrap; min-width: 300px;}
+        .detail-item { width: 50%; padding: 8px 0; font-size: 15px; }
+        .detail-item strong { color: var(--primary-blue); width: 120px; display: inline-block; font-weight: 500;}
+        .student-data { font-weight: 700; color: #000000; }
+        .student-data.highlight { font-size: 18px; }
+        .photo-area { text-align: center; flex-shrink: 0; flex: 1; min-width: 150px; }
+        .photo-box {
+            width: 125px; height: 155px; border: 2px solid var(--border-color);
+            display: flex; justify-content: center; align-items: center; color: #9e9e9e;
+            padding: 4px; margin: 0 auto; background-color: #fff; border-radius: 4px;
+        }
+        .photo-box img { width: 100%; height: 100%; object-fit: cover; border-radius: 2px; }
+        #qrcode { margin-top: 10px; padding: 5px; background: white; display: inline-block; border: 1px solid var(--border-color); border-radius: 4px;}
+        .exam-schedule { margin-top: 25px; }
+        table { width: 100%; border-collapse: collapse; }
+        table th, table td { border: 1px solid var(--border-color); padding: 10px; font-size: 14px; text-align: left; }
+        table th { background-color: var(--primary-blue); color: white; font-weight: 600; font-family: 'Montserrat', sans-serif; text-align: center; }
+        table tbody tr:nth-child(even) { background-color: var(--bg-light); }
+        .signature-box { height: 35px; min-width: 120px; margin: auto; }
+        .admit-footer { display: flex; justify-content: space-between; align-items: flex-end; padding-top: 25px; margin-top: 25px; border-top: 1px solid var(--border-color); }
+        .signature-area { text-align: center; font-size: 15px; color: var(--text-color); font-weight: 500; width: 220px; }
+        .signature-area .signature-image { height: 45px; margin-bottom: -5px; object-fit: contain; }
+        .signature-line { border-top: 1px solid var(--text-color); padding-top: 5px; font-family: 'Montserrat', sans-serif; font-weight: 600; }
+        .download-info-container { display: none; width: 100%; max-width: 210mm; text-align: center; margin-top: 10px; font-size: 12px; color: #343a40; }
+        .instructions-page h3 { text-align: center; color: var(--primary-blue); font-size: 20px; font-family: 'Montserrat', sans-serif; margin-bottom: 15px; }
+        .instructions-page ol { line-height: 1.8; font-size: 14px; color: var(--danger-red); list-style-type: decimal; padding-left: 20px; text-align: justify;}
+        .instructions-page li { margin-bottom: 8px; font-weight: 500; }
+        .print-page-break { page-break-before: always; }
+        .action-buttons { display: none; width: 100%; max-width: 210mm; margin: 20px auto 0; gap: 15px; flex-wrap: wrap; justify-content: center; }
+        #downloadButton, #printButton { flex: 1; min-width: 200px; padding: 15px; color: white; border: none; border-radius: 8px; font-size: 18px; font-weight: 600; cursor: pointer; transition: transform 0.2s, box-shadow 0.3s; }
+        #downloadButton:hover, #printButton:hover { transform: translateY(-2px); box-shadow: 0 8px 15px rgba(0,0,0,0.2); }
+        #downloadButton { background: linear-gradient(45deg, #28a745, #218838); }
+        #printButton { background: linear-gradient(45deg, var(--secondary-blue), var(--primary-blue)); }
+        
+        @media print {
+            body { margin: 0; padding: 0; background: #fff; }
+            .login-container, .action-buttons, .download-info-container { display: none !important; }
+            .page-container { display: block !important; box-shadow: none !important; border: none !important; margin: 0 !important; width: 100% !important; }
+            .admit-card-page { border: 1px solid #000 !important; }
+            .admit-card-page::before { opacity: 0.12 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            table th { background-color: var(--primary-blue) !important; color: white !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="login-container" id="loginWrapper">
+        <div class="login-box">
+            <img alt="School Logo" class="logo-login" src="logo.png">
+            <h2>MAHARISHI VIDYA MANDIR, NALBARI</h2>
+            <p>ADMIT CARD OF FINAL EXAMINATION 2025-2026</p>
+            <form id="admitCardForm">
+                <div class="input-group">
+                    <i class="fa-solid fa-user"></i>
+                    <input id="studentID" name="studentID" placeholder="Student ID" required type="text">
+                </div>
+                <div class="input-group">
+                     <i class="fa-solid fa-calendar-days"></i>
+                    <input id="dob" name="dob" title="Date of Birth" required type="date">
+                </div>
+                <button id="submitButton" type="submit">Get Admit Card</button>
+            </form>
+            <p class="error-message" id="errorMessage"></p>
+        </div>
+    </div>
+
+    <div class="page-container" id="admitCardContainer">
+        <div id="admitCardContent"></div>
+    </div>
+    
+    <div class="download-info-container" id="downloadInfoContainer">
+        Generated on: <span id="downloadDateTime"></span> | IP Address: <span id="userIP"></span>
+    </div>
+
+    <div class="action-buttons" id="actionButtons">
+        <button id="downloadButton">Download as PDF</button>
+        <button id="printButton">Print Admit Card</button>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/gh/davidshimjs/qrcodejs/qrcode.min.js"></script>
+
+    <script>
+        window.addEventListener('load', function () {
+            
+            const API_URL = 'https://script.google.com/macros/s/AKfycbywvbhatb2eF_TZoFETnpN2Ax7dyL6xe77BvFfetpHAY5ZDfT3gXWSvP-A_4j5l891s/exec'; 
+            
+            const form = document.getElementById('admitCardForm');
+            const loginWrapper = document.getElementById('loginWrapper');
+            const submitButton = document.getElementById('submitButton');
+            const errorMessage = document.getElementById('errorMessage');
+            const admitCardContainer = document.getElementById('admitCardContainer');
+            const actionButtons = document.getElementById('actionButtons');
+            const downloadInfoContainer = document.getElementById('downloadInfoContainer');
+            
+            let cachedStaticImages = { logo: null, principalSign: null };
+
+            async function imageUrlToBase64(url) {
+                if (!url) return null;
+                try {
+                    const response = await fetch(url);
+                    if (!response.ok) throw new Error(`Network response was not ok for ${url}`);
+                    const blob = await response.blob();
+                    return new Promise((resolve, reject) => {
+                        const reader = new FileReader();
+                        reader.onloadend = () => resolve(reader.result);
+                        reader.onerror = reject;
+                        reader.readAsDataURL(blob);
+                    });
+                } catch (error) {
+                    console.error(`Error converting image to Base64: ${url}`, error);
+                    return null;
+                }
+            }
+
+            Promise.all([
+                imageUrlToBase64('logo.png'),
+                imageUrlToBase64('sign.png')
+            ]).then(([logoBase64, signBase64]) => {
+                cachedStaticImages.logo = logoBase64;
+                cachedStaticImages.principalSign = signBase64;
+                if (logoBase64) {
+                    document.documentElement.style.setProperty('--logo-bg-url', `url('${logoBase64}')`);
+                }
+            });
+
+            function formatDate(dateValue) {
+                if (!dateValue) return '';
+                try {
+                    const date = new Date(dateValue);
+                    if (isNaN(date.getTime())) return String(dateValue);
+                    const day = String(date.getDate()).padStart(2, '0');
+                    const month = String(date.getMonth() + 1).padStart(2, '0');
+                    const year = date.getFullYear();
+                    return `${day}-${month}-${year}`;
+                } catch (error) { return String(dateValue); }
+            }
+
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const studentID = document.getElementById('studentID').value.trim().toUpperCase();
+                const dob = document.getElementById('dob').value.trim();
+                if (!studentID || !dob) { showError('Please fill in both fields.'); return; }
+
+                submitButton.disabled = true;
+                submitButton.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Verifying...';
+                errorMessage.textContent = '';
+                
+                fetch(API_URL)
+                    .then(response => response.json())
+                    .then(apiResponse => {
+                        if (!apiResponse.data || apiResponse.status !== "success") {
+                            throw new Error("API did not return valid data.");
+                        }
+                        
+                        const studentList = apiResponse.data;
+                        const student = studentList.find(s => String(s['STUDENT ID']).toUpperCase() === studentID && String(s['DATE OF BIRTH']) === dob);
+
+                        if (student) {
+                            populateAdmitCard(student); 
+                            loginWrapper.style.display = 'none';
+                            admitCardContainer.style.display = 'block';
+                            actionButtons.style.display = 'flex';
+                            downloadInfoContainer.style.display = 'block';
+                            document.body.style.background = '#e9ecef';
+                        } else {
+                            showError('Invalid credentials. Please check details.');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Fetch Error:', error);
+                        showError('An error occurred. Please check API URL and Sheet.');
+                    })
+                    .finally(() => {
+                        submitButton.disabled = false;
+                        submitButton.innerHTML = 'Get Admit Card';
+                    });
+            });
+            
+            function populateAdmitCard(data) {
+                const admitCardContentDiv = document.getElementById('admitCardContent');
+                
+                const photoBase64 = data['PHOTO_BASE64'] || '';
+                const signatureBase64 = data['SIGNATURE_BASE64'] || '';
+
+                let scheduleRows = '';
+                for (let i = 1; i <= 10; i++) {
+                    if (data[`Date ${i}`] && data[`Paper ${i}`]) {
+                        scheduleRows += `<tr><td>${formatDate(data[`Date ${i}`])}</td><td>${data[`Paper ${i}`]}</td><td style="text-align:center;"><div class="signature-box"></div></td><td style-align:center;"><div class="signature-box"></div></td></tr>`;
+                    }
+                }
+                
+                const admitCardHTML = `
+                    <div class="admit-card-page">
+                        <header class="admit-header">
+                            <img alt="School Logo" class="logo-admit" src="${cachedStaticImages.logo || 'logo.png'}">
+                            <div class="header-text">
+                                <h1>MAHARISHI VIDYA MANDIR, NALBARI</h1>
+                                <p class="sub-line1">CBSE CURRICULUM • BATIRAM ROAD, NALBARI, PIN-781335</p>
+                                <p class="sub-line2">ADMIT CARD</p>
+                                <p class="sub-line3">FINAL EXAMINATION 2025-2026</p>
+                            </div>
+                        </header>
+                        <div class="student-info-container">
+                             <div class="student-details-grid">
+                                <div class="detail-item" style="width: 100%;"><strong>Student Name:</strong> <span class="student-data highlight">${data["STUDENT'S NAME"]}</span></div>
+                                <div class="detail-item"><strong>Student ID:</strong> <span class="student-data">${data['STUDENT ID']}</span></div>
+                                <div class="detail-item"><strong>Class:</strong> <span class="student-data">${data['CLASS']} - ${data['SECTION']}</span></div>
+                                <div class="detail-item"><strong>Father's Name:</strong> <span class="student-data">${data["FATHER'S NAME"]}</span></div>
+                                <div class="detail-item"><strong>Roll No:</strong> <span class="student-data">${data['CLASS ROLL NO']}</span></div>
+                            </div>
+                            <div class="photo-area">
+                                <div class="photo-box">
+                                    ${photoBase64 ? `<img src="${photoBase64}" alt="Student Photo">` : 'Photo Missing'}
+                                </div>
+                                <div id="qrcode"></div>
+                            </div>
+                        </div>
+                        <div class="exam-schedule">
+                            <table>
+                                <thead><tr><th>Date</th><th>Subject / Paper</th><th>Student's Signature</th><th>Invigilator's Signature</th></tr></thead>
+                                <tbody>${scheduleRows}</tbody>
+                            </table>
+                        </div>
+                        <footer class="admit-footer">
+                            <div class="signature-area">
+                                ${signatureBase64 ? `<img src="${signatureBase64}" alt="Student Signature" class="signature-image">` : ''}
+                                <div class="signature-line">Student's Signature</div>
+                            </div>
+                            <div class="signature-area">
+                                <img alt="Principal's Signature" class="signature-image" src="${cachedStaticImages.principalSign || 'sign.png'}">
+                                <div class="signature-line">Principal's Signature</div>
+                            </div>
+                        </footer>
+                    </div>`;
+                const instructionsHTML = `
+                    <div class="instructions-page print-page-break">
+                        <h3>Instructions for Candidates</h3>
+                        <ol>
+                           <li>On all examination days, students must carry their Admit Card. Without the admit card, entry into the examination hall will not be permitted.</li>
+                           <li>Students must reach the school at least 15 minutes before the reporting time. Late entry after the seating time will not be allowed.</li>
+                           <li>Carrying electronic devices such as mobile phones, smart watches, calculators, or any other gadgets inside the examination hall is strictly prohibited.</li>
+                           <li>No candidate shall adopt or indulge in unfair means or malpractices during the examination. If found guilty, the candidature will be cancelled and legal action will be taken.</li>
+                           <li>Students must maintain silence and discipline inside the examination hall. Any misconduct will lead to immediate disqualification.</li>
+                           <li>Do not write anything on the question paper or admit card, except where signatures are required.</li>
+                           <li>The admit card must display a clear photograph, student’s signature, and QR code. Admit cards without these will not be accepted.</li>
+                           <li>Students must verify all details carefully before printing the admit card. In case of any errors, immediately inform the school administration.</li>
+                        </ol>
+                    </div>`;
+
+                admitCardContentDiv.innerHTML = admitCardHTML + instructionsHTML;
+                
+                const now = new Date();
+                document.getElementById('downloadDateTime').textContent = now.toLocaleString('en-GB');
+                fetch('https://api.ipify.org?format=json').then(r => r.json()).then(d => document.getElementById('userIP').textContent = d.ip).catch(() => document.getElementById('userIP').textContent = 'N/A');
+                
+                new QRCode(document.getElementById('qrcode'), {
+                    text: `ID: ${data['STUDENT ID']}, Name: ${data["STUDENT'S NAME"]}, Class: ${data['CLASS']}`,
+                    width: 100, height: 100, colorDark : "#0A2240", colorLight : "#ffffff", correctLevel : QRCode.CorrectLevel.H
+                });
+            }
+
+            function showError(message) { errorMessage.textContent = message; }
+            document.getElementById('downloadButton').addEventListener('click', () => { window.print(); });
+            document.getElementById('printButton').addEventListener('click', () => { window.print(); });
+        });
+    </script>
+</body>
+</html>
