@@ -68,9 +68,8 @@
             padding: 12mm; 
             box-sizing: border-box;
             position: relative;
-            /* Switched to CSS Grid for robust page layout */
-            display: grid;
-            grid-template-rows: auto 1fr auto; /* Header, Content (stretches), Footer */
+            display: flex;
+            flex-direction: column;
             height: 297mm; /* A4 height */
         }
         .admit-card-page { border: 1.5px solid var(--primary-blue); }
@@ -100,7 +99,6 @@
         .details-section { flex: 1; min-width: 0; }
         .student-details-table { border-collapse: collapse; width: 100%; font-size: 14px; }
         .student-details-table td { 
-            /* Increased padding for more line space */
             padding: 11px 5px; 
             vertical-align: top; 
         }
@@ -123,22 +121,26 @@
         .exam-schedule th { background-color: var(--primary-blue); color: white; font-weight: 600; text-align: center; }
         .signature-box { height: 35px; }
 
-        .page-footer {
-            position: relative; z-index: 1;
-        }
         .admit-footer {
             display: flex; justify-content: space-between; align-items: flex-end;
-            padding-top: 15px; border-top: 1px solid var(--border-color);
+            padding-top: 15px; margin-top: 30px; /* Gives space from table */
+            border-top: 1px solid var(--border-color);
         }
         .signature-area { text-align: center; font-size: 14px; color: var(--text-color); font-weight: 500; width: 220px; }
         .signature-area .signature-image { height: 45px; margin-bottom: -5px; object-fit: contain; }
         .signature-line { border-top: 1px solid var(--text-color); padding-top: 5px; font-family: 'Montserrat', sans-serif; font-weight: 600; }
         
+        /* This spacer element will grow to fill empty space */
+        .spacer {
+            flex-grow: 1;
+        }
+
         .download-info-container { 
             width: 100%; text-align: center; margin-top: 15px; font-size: 10px; color: #555; 
+            position: relative; z-index: 1;
         }
         
-        .instructions-page { grid-template-rows: auto 1fr auto; }
+        .instructions-page { display: flex; flex-direction: column; }
         .instructions-page h3 { text-align: center; color: var(--primary-blue); font-size: 20px; margin-bottom: 15px; }
         .instructions-page ol { line-height: 1.8; font-size: 14px; color: var(--danger-red); padding-left: 20px; text-align: justify;}
         .instructions-page li { margin-bottom: 8px; font-weight: 500; }
@@ -152,7 +154,7 @@
         
         @media (max-width: 900px) {
             .page-container { width: 100%; margin: 10px 0; }
-            .admit-card-page, .instructions-page { height: auto; padding: 15px; display: block; } /* Revert to block for responsive view */
+            .admit-card-page, .instructions-page { height: auto; padding: 15px; } 
             .header-text h1 { font-size: 20px; }
             .header-text .sub-line2 { font-size: 15px; }
             .student-details-table { font-size: 13px; }
@@ -182,10 +184,7 @@
             body { margin: 0; padding: 0; background: #fff; }
             .login-container, .action-buttons { display: none !important; }
             .page-container { display: block !important; box-shadow: none !important; border: none !important; margin: 0 !important; width: 100% !important; }
-            .admit-card-page, .instructions-page { 
-                display: grid !important; /* Ensure grid is used for printing */
-                height: 297mm; 
-            }
+            .admit-card-page, .instructions-page { height: 297mm; }
             .admit-card-page { border: 1px solid #000 !important; }
             .admit-card-page::before { opacity: 0.1 !important; }
             .download-info-container { display: block !important; }
@@ -408,10 +407,7 @@
                                     <tbody>${scheduleRows}</tbody>
                                 </table>
                             </div>
-                        </div>
-
-                        <footer class="page-footer">
-                            <div class="admit-footer">
+                            <footer class="admit-footer">
                                 <div class="signature-area">
                                     ${signatureBase64 ? `<img src="${signatureBase64}" alt="Student Signature" class="signature-image">` : ''}
                                     <div class="signature-line">Student's Signature</div>
@@ -420,9 +416,10 @@
                                     <img alt="Principal's Signature" class="signature-image" src="${cachedStaticImages.principalSign || 'sign.png'}">
                                     <div class="signature-line">Principal's Signature</div>
                                 </div>
-                            </div>
-                            ${downloadInfoHTML}
-                        </footer>
+                            </footer>
+                        </div>
+                        
+                        <div class="spacer"></div> ${downloadInfoHTML}
                     </div>`;
 
                 const instructionsHTML = `
@@ -442,9 +439,8 @@
                                <li>Students must verify all details carefully before printing the admit card. In case of any errors, immediately inform the school administration.</li>
                             </ol>
                         </main>
-                        <footer class="page-footer">
-                            ${downloadInfoHTML}
-                        </footer>
+                        <div class="spacer"></div>
+                        ${downloadInfoHTML}
                     </div>`;
 
                 admitCardContentDiv.innerHTML = admitCardHTML + instructionsHTML;
