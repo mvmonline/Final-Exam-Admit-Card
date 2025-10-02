@@ -63,6 +63,14 @@
             box-shadow: 0 10px 50px rgba(0,0,0,0.15);
             margin: 20px 0; display: none;
         }
+
+        .page-header-info {
+            text-align: center;
+            font-size: 10px;
+            color: #555;
+            padding-bottom: 5px;
+        }
+
         .admit-card-page, .instructions-page {
             background-color: white;
             padding: 12mm; 
@@ -123,23 +131,15 @@
 
         .admit-footer {
             display: flex; justify-content: space-between; align-items: flex-end;
-            padding-top: 15px; margin-top: 30px; /* Gives space from table */
+            padding-top: 15px; margin-top: 30px;
             border-top: 1px solid var(--border-color);
         }
         .signature-area { text-align: center; font-size: 14px; color: var(--text-color); font-weight: 500; width: 220px; }
         .signature-area .signature-image { height: 45px; margin-bottom: -5px; object-fit: contain; }
         .signature-line { border-top: 1px solid var(--text-color); padding-top: 5px; font-family: 'Montserrat', sans-serif; font-weight: 600; }
         
-        /* This spacer element will grow to fill empty space */
-        .spacer {
-            flex-grow: 1;
-        }
+        .spacer { flex-grow: 1; }
 
-        .download-info-container { 
-            width: 100%; text-align: center; margin-top: 15px; font-size: 10px; color: #555; 
-            position: relative; z-index: 1;
-        }
-        
         .instructions-page { display: flex; flex-direction: column; }
         .instructions-page h3 { text-align: center; color: var(--primary-blue); font-size: 20px; margin-bottom: 15px; }
         .instructions-page ol { line-height: 1.8; font-size: 14px; color: var(--danger-red); padding-left: 20px; text-align: justify;}
@@ -187,7 +187,15 @@
             .admit-card-page, .instructions-page { height: 297mm; }
             .admit-card-page { border: 1px solid #000 !important; }
             .admit-card-page::before { opacity: 0.1 !important; }
-            .download-info-container { display: block !important; }
+            .page-header-info {
+                display: block !important;
+                position: fixed;
+                top: 5mm;
+                left: 0;
+                width: 100%;
+                text-align: center;
+             }
+             .printable-page-wrapper { padding-top: 15mm; }
         }
     </style>
 </head>
@@ -214,8 +222,7 @@
     </div>
 
     <div class="page-container" id="admitCardContainer">
-        <div id="admitCardContent"></div>
-    </div>
+        </div>
     
     <div class="action-buttons" id="actionButtons">
         <button id="downloadButton">Download as PDF</button>
@@ -319,7 +326,7 @@
             });
             
             async function populateAdmitCard(data) {
-                const admitCardContentDiv = document.getElementById('admitCardContent');
+                const admitCardContentDiv = document.getElementById('admitCardContainer');
                 
                 const photoBase64 = data['PHOTO_BASE64'] || '';
                 const signatureBase64 = data['SIGNATURE_BASE64'] || '';
@@ -347,100 +354,104 @@
 
                 const now = new Date();
                 const dateTime = now.toLocaleString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' });
-                const downloadInfoHTML = `<div class="download-info-container">Generated on: ${dateTime} | IP Address: ${ipAddress}</div>`;
+                const headerInfoHTML = `<div class="page-header-info">Generated on: ${dateTime} | IP Address: ${ipAddress}</div>`;
 
                 const admitCardHTML = `
-                    <div class="admit-card-page">
-                        <header class="admit-header">
-                            <img alt="School Logo" class="logo-admit" src="${cachedStaticImages.logo || 'logo.png'}">
-                            <div class="header-text">
-                                <h1>MAHARISHI VIDYA MANDIR, NALBARI</h1>
-                                <p class="sub-line1">CBSE CURRICULUM • BATIRAM ROAD, NALBARI, PIN-781335</p>
-                                <p class="sub-line2">ADMIT CARD</p>
-                                <p class="sub-line3">FINAL EXAMINATION 2025-2026</p>
-                            </div>
-                        </header>
+                    <div class="printable-page-wrapper">
+                        ${headerInfoHTML}
+                        <div class="admit-card-page">
+                            <header class="admit-header">
+                                <img alt="School Logo" class="logo-admit" src="${cachedStaticImages.logo || 'logo.png'}">
+                                <div class="header-text">
+                                    <h1>MAHARISHI VIDYA MANDIR, NALBARI</h1>
+                                    <p class="sub-line1">CBSE CURRICULUM • BATIRAM ROAD, NALBARI, PIN-781335</p>
+                                    <p class="sub-line2">ADMIT CARD</p>
+                                    <p class="sub-line3">FINAL EXAMINATION 2025-2026</p>
+                                </div>
+                            </header>
 
-                        <div class="page-content">
-                            <div class="student-info-container">
-                                <div class="details-section">
-                                    <table class="student-details-table">
-                                        <tr>
-                                            <td>Student Name</td>
-                                            <td><span class="student-data highlight">${data["STUDENT'S NAME"]}</span></td>
-                                        </tr>
-                                        <tr>
-                                            <td>Father's Name</td>
-                                            <td><span class="student-data">${data["FATHER'S NAME"]}</span></td>
-                                        </tr>
-                                        <tr>
-                                            <td>Student ID</td>
-                                            <td><span class="student-data">${data['STUDENT ID']}</span></td>
-                                        </tr>
-                                        <tr>
-                                            <td>Class</td>
-                                            <td><span class="student-data">${data['CLASS']} - ${data['SECTION']}</span></td>
-                                        </tr>
-                                        <tr>
-                                            <td>Roll No</td>
-                                            <td><span class="student-data">${data['CLASS ROLL NO']}</span></td>
-                                        </tr>
+                            <div class="page-content">
+                                <div class="student-info-container">
+                                    <div class="details-section">
+                                        <table class="student-details-table">
+                                            <tr>
+                                                <td>Student Name</td>
+                                                <td><span class="student-data highlight">${data["STUDENT'S NAME"]}</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Father's Name</td>
+                                                <td><span class="student-data">${data["FATHER'S NAME"]}</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Student ID</td>
+                                                <td><span class="student-data">${data['STUDENT ID']}</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Class</td>
+                                                <td><span class="student-data">${data['CLASS']} - ${data['SECTION']}</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Roll No</td>
+                                                <td><span class="student-data">${data['CLASS ROLL NO']}</span></td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                    <div class="photo-area">
+                                        <div class="photo-box">
+                                            ${photoBase64 ? `<img src="${photoBase64}" alt="Student Photo">` : 'Photo Missing'}
+                                        </div>
+                                        <div id="qrcode"></div>
+                                    </div>
+                                </div>
+                                <div class="exam-schedule">
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th>Date</th>
+                                                <th>Subject / Paper</th>
+                                                <th>Student's Signature</th>
+                                                <th>Invigilator's Signature</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>${scheduleRows}</tbody>
                                     </table>
                                 </div>
-                                <div class="photo-area">
-                                    <div class="photo-box">
-                                        ${photoBase64 ? `<img src="${photoBase64}" alt="Student Photo">` : 'Photo Missing'}
+                                <footer class="admit-footer">
+                                    <div class="signature-area">
+                                        ${signatureBase64 ? `<img src="${signatureBase64}" alt="Student Signature" class="signature-image">` : ''}
+                                        <div class="signature-line">Student's Signature</div>
                                     </div>
-                                    <div id="qrcode"></div>
-                                </div>
+                                    <div class="signature-area">
+                                        <img alt="Principal's Signature" class="signature-image" src="${cachedStaticImages.principalSign || 'sign.png'}">
+                                        <div class="signature-line">Principal's Signature</div>
+                                    </div>
+                                </footer>
                             </div>
-                            <div class="exam-schedule">
-                                <table>
-                                    <thead>
-                                        <tr>
-                                            <th>Date</th>
-                                            <th>Subject / Paper</th>
-                                            <th>Student's Signature</th>
-                                            <th>Invigilator's Signature</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>${scheduleRows}</tbody>
-                                </table>
-                            </div>
-                            <footer class="admit-footer">
-                                <div class="signature-area">
-                                    ${signatureBase64 ? `<img src="${signatureBase64}" alt="Student Signature" class="signature-image">` : ''}
-                                    <div class="signature-line">Student's Signature</div>
-                                </div>
-                                <div class="signature-area">
-                                    <img alt="Principal's Signature" class="signature-image" src="${cachedStaticImages.principalSign || 'sign.png'}">
-                                    <div class="signature-line">Principal's Signature</div>
-                                </div>
-                            </footer>
+                            <div class="spacer"></div>
                         </div>
-                        
-                        <div class="spacer"></div> ${downloadInfoHTML}
                     </div>`;
 
                 const instructionsHTML = `
-                    <div class="instructions-page print-page-break">
-                        <header>
-                            <h3>Instructions for Candidates</h3>
-                        </header>
-                        <main>
-                            <ol>
-                               <li>On all examination days, students must carry their Admit Card. Without the admit card, entry into the examination hall will not be permitted.</li>
-                               <li>Students must reach the school at least 15 minutes before the reporting time. Late entry after the seating time will not be allowed.</li>
-                               <li>Carrying electronic devices such as mobile phones, smart watches, calculators, or any other gadgets inside the examination hall is strictly prohibited.</li>
-                               <li>No candidate shall adopt or indulge in unfair means or malpractices during the examination. If found guilty, the candidature will be cancelled and legal action will be taken.</li>
-                               <li>Students must maintain silence and discipline inside the examination hall. Any misconduct will lead to immediate disqualification.</li>
-                               <li>Do not write anything on the question paper or admit card, except where signatures are required.</li>
-                               <li>The admit card must display a clear photograph, student’s signature, and QR code. Admit cards without these will not be accepted.</li>
-                               <li>Students must verify all details carefully before printing the admit card. In case of any errors, immediately inform the school administration.</li>
-                            </ol>
-                        </main>
-                        <div class="spacer"></div>
-                        ${downloadInfoHTML}
+                    <div class="printable-page-wrapper print-page-break">
+                        ${headerInfoHTML}
+                        <div class="instructions-page">
+                            <header>
+                                <h3>Instructions for Candidates</h3>
+                            </header>
+                            <main>
+                                <ol>
+                                   <li>On all examination days, students must carry their Admit Card. Without the admit card, entry into the examination hall will not be permitted.</li>
+                                   <li>Students must reach the school at least 15 minutes before the reporting time. Late entry after the seating time will not be allowed.</li>
+                                   <li>Carrying electronic devices such as mobile phones, smart watches, calculators, or any other gadgets inside the examination hall is strictly prohibited.</li>
+                                   <li>No candidate shall adopt or indulge in unfair means or malpractices during the examination. If found guilty, the candidature will be cancelled and legal action will be taken.</li>
+                                   <li>Students must maintain silence and discipline inside the examination hall. Any misconduct will lead to immediate disqualification.</li>
+                                   <li>Do not write anything on the question paper or admit card, except where signatures are required.</li>
+                                   <li>The admit card must display a clear photograph, student’s signature, and QR code. Admit cards without these will not be accepted.</li>
+                                   <li>Students must verify all details carefully before printing the admit card. In case of any errors, immediately inform the school administration.</li>
+                                </ol>
+                            </main>
+                            <div class="spacer"></div>
+                        </div>
                     </div>`;
 
                 admitCardContentDiv.innerHTML = admitCardHTML + instructionsHTML;
