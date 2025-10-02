@@ -58,13 +58,16 @@
         .login-box button:hover { transform: translateY(-3px); box-shadow: 0 15px 35px rgba(33, 150, 243, 0.5); }
         .error-message { color: var(--danger-red); margin-top: 20px; font-weight: 500; height: 20px; font-size: 15px; }
         .page-container {
-            background: #fff; width: 210mm; box-shadow: 0 10px 50px rgba(0,0,0,0.15);
+            background: #fff; width: 210mm; height: 297mm; box-shadow: 0 10px 50px rgba(0,0,0,0.15);
             box-sizing: border-box; margin: 20px 0; display: none;
         }
         .admit-card-page, .instructions-page {
-            padding: 15mm; box-sizing: border-box; position: relative; background-color: white; z-index: 1;
+            /* Adjusted padding to better fit A4 */
+            padding: 12mm; 
+            box-sizing: border-box; position: relative; background-color: white; z-index: 1;
+            height: 297mm; /* Ensure it takes full A4 height */
         }
-        .admit-card-page { border: 1.5px solid var(--primary-blue); }
+        .admit-card-page { border: 1.5px solid var(--primary-blue); display: flex; flex-direction: column; }
         
         .admit-card-page::before {
             content: ''; position: absolute; top: 50%; left: 50%; z-index: -1;
@@ -73,8 +76,11 @@
             background-position: center; background-size: contain; opacity: 0.12;
         }
         .admit-header {
-            display: flex; align-items: center; gap: 20px; padding-bottom: 15px;
-            border-bottom: 2px solid var(--border-color); margin-bottom: 20px;
+            display: flex; align-items: center; gap: 20px; 
+            /* Adjusted spacing */
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--border-color); 
+            margin-bottom: 15px;
         }
         .logo-admit { width: 90px; height: 90px; flex-shrink: 0; }
         .header-text { text-align: left; }
@@ -88,7 +94,12 @@
         .header-text .sub-line3 { color: #8B0000; font-size: 16px; font-weight: 500; }
         .student-info-container { display: flex; gap: 20px; flex-wrap: wrap;}
         .student-details-grid { flex: 2; display: flex; flex-wrap: wrap; min-width: 300px;}
-        .detail-item { width: 50%; padding: 8px 0; font-size: 15px; }
+        .detail-item { 
+            width: 50%; 
+            /* Adjusted padding */
+            padding: 6px 0; 
+            font-size: 15px; 
+        }
         .detail-item strong { color: var(--primary-blue); width: 120px; display: inline-block; font-weight: 500;}
         .student-data { font-weight: 700; color: #000000; }
         .student-data.highlight { font-size: 18px; }
@@ -100,13 +111,28 @@
         }
         .photo-box img { width: 100%; height: 100%; object-fit: cover; border-radius: 2px; }
         #qrcode { margin-top: 10px; padding: 5px; background: white; display: inline-block; border: 1px solid var(--border-color); border-radius: 4px;}
-        .exam-schedule { margin-top: 25px; }
+        .exam-schedule { 
+            /* Adjusted margin */
+            margin-top: 20px; 
+            flex-grow: 1; 
+        }
         table { width: 100%; border-collapse: collapse; }
-        table th, table td { border: 1px solid var(--border-color); padding: 10px; font-size: 14px; text-align: left; }
+        table th, table td { 
+            border: 1px solid var(--border-color); 
+            /* Adjusted padding */
+            padding: 8px; 
+            font-size: 14px; text-align: left; 
+        }
         table th { background-color: var(--primary-blue); color: white; font-weight: 600; font-family: 'Montserrat', sans-serif; text-align: center; }
         table tbody tr:nth-child(even) { background-color: var(--bg-light); }
         .signature-box { height: 35px; min-width: 120px; margin: auto; }
-        .admit-footer { display: flex; justify-content: space-between; align-items: flex-end; padding-top: 25px; margin-top: 25px; border-top: 1px solid var(--border-color); }
+        .admit-footer { 
+            display: flex; justify-content: space-between; align-items: flex-end; 
+            /* Adjusted spacing */
+            padding-top: 15px; 
+            margin-top: 20px; 
+            border-top: 1px solid var(--border-color); 
+        }
         .signature-area { text-align: center; font-size: 15px; color: var(--text-color); font-weight: 500; width: 220px; }
         .signature-area .signature-image { height: 45px; margin-bottom: -5px; object-fit: contain; }
         .signature-line { border-top: 1px solid var(--text-color); padding-top: 5px; font-family: 'Montserrat', sans-serif; font-weight: 600; }
@@ -124,8 +150,9 @@
         @media print {
             body { margin: 0; padding: 0; background: #fff; }
             .login-container, .action-buttons, .download-info-container { display: none !important; }
-            .page-container { display: block !important; box-shadow: none !important; border: none !important; margin: 0 !important; width: 100% !important; }
+            .page-container { display: block !important; box-shadow: none !important; border: none !important; margin: 0 !important; width: 100% !important; height: auto !important; }
             .admit-card-page { border: 1px solid #000 !important; }
+            .admit-card-page, .instructions-page { height: 297mm !important; } /* A4 height for print */
             .admit-card-page::before { opacity: 0.12 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
             table th { background-color: var(--primary-blue) !important; color: white !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
         }
@@ -274,7 +301,7 @@
                 let scheduleRows = '';
                 for (let i = 1; i <= 10; i++) {
                     if (data[`Date ${i}`] && data[`Paper ${i}`]) {
-                        scheduleRows += `<tr><td>${formatDate(data[`Date ${i}`])}</td><td>${data[`Paper ${i}`]}</td><td style="text-align:center;"><div class="signature-box"></div></td><td style-align:center;"><div class="signature-box"></div></td></tr>`;
+                        scheduleRows += `<tr><td>${formatDate(data[`Date ${i}`])}</td><td>${data[`Paper ${i}`]}</td><td style="text-align:center;"><div class="signature-box"></div></td><td style="text-align:center;"><div class="signature-box"></div></td></tr>`;
                     }
                 }
                 
@@ -289,27 +316,29 @@
                                 <p class="sub-line3">FINAL EXAMINATION 2025-2026</p>
                             </div>
                         </header>
-                        <div class="student-info-container">
-                             <div class="student-details-grid">
-                                <div class="detail-item" style="width: 100%;"><strong>Student Name:</strong> <span class="student-data highlight">${data["STUDENT'S NAME"]}</span></div>
-                                <div class="detail-item"><strong>Student ID:</strong> <span class="student-data">${data['STUDENT ID']}</span></div>
-                                <div class="detail-item"><strong>Class:</strong> <span class="student-data">${data['CLASS']} - ${data['SECTION']}</span></div>
-                                <div class="detail-item"><strong>Father's Name:</strong> <span class="student-data">${data["FATHER'S NAME"]}</span></div>
-                                <div class="detail-item"><strong>Roll No:</strong> <span class="student-data">${data['CLASS ROLL NO']}</span></div>
-                            </div>
-                            <div class="photo-area">
-                                <div class="photo-box">
-                                    ${photoBase64 ? `<img src="${photoBase64}" alt="Student Photo">` : 'Photo Missing'}
+                        <main>
+                            <div class="student-info-container">
+                                <div class="student-details-grid">
+                                    <div class="detail-item" style="width: 100%;"><strong>Student Name:</strong> <span class="student-data highlight">${data["STUDENT'S NAME"]}</span></div>
+                                    <div class="detail-item"><strong>Student ID:</strong> <span class="student-data">${data['STUDENT ID']}</span></div>
+                                    <div class="detail-item"><strong>Class:</strong> <span class="student-data">${data['CLASS']} - ${data['SECTION']}</span></div>
+                                    <div class="detail-item"><strong>Father's Name:</strong> <span class="student-data">${data["FATHER'S NAME"]}</span></div>
+                                    <div class="detail-item"><strong>Roll No:</strong> <span class="student-data">${data['CLASS ROLL NO']}</span></div>
                                 </div>
-                                <div id="qrcode"></div>
+                                <div class="photo-area">
+                                    <div class="photo-box">
+                                        ${photoBase64 ? `<img src="${photoBase64}" alt="Student Photo">` : 'Photo Missing'}
+                                    </div>
+                                    <div id="qrcode"></div>
+                                </div>
                             </div>
-                        </div>
-                        <div class="exam-schedule">
-                            <table>
-                                <thead><tr><th>Date</th><th>Subject / Paper</th><th>Student's Signature</th><th>Invigilator's Signature</th></tr></thead>
-                                <tbody>${scheduleRows}</tbody>
-                            </table>
-                        </div>
+                            <div class="exam-schedule">
+                                <table>
+                                    <thead><tr><th>Date</th><th>Subject / Paper</th><th>Student's Signature</th><th>Invigilator's Signature</th></tr></thead>
+                                    <tbody>${scheduleRows}</tbody>
+                                </table>
+                            </div>
+                        </main>
                         <footer class="admit-footer">
                             <div class="signature-area">
                                 ${signatureBase64 ? `<img src="${signatureBase64}" alt="Student Signature" class="signature-image">` : ''}
