@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MVM Nalbari - Admit Card Download</title>
+    <title>Admit Card of Final Examination of MVM Nalbari</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -58,16 +58,16 @@
         .login-box button:hover { transform: translateY(-3px); box-shadow: 0 15px 35px rgba(33, 150, 243, 0.5); }
         .error-message { color: var(--danger-red); margin-top: 20px; font-weight: 500; height: 20px; font-size: 15px; }
         .page-container {
-            background: #fff; width: 210mm; height: 297mm; box-shadow: 0 10px 50px rgba(0,0,0,0.15);
+            background: #fff; width: 210mm;
+            box-shadow: 0 10px 50px rgba(0,0,0,0.15);
             box-sizing: border-box; margin: 20px 0; display: none;
         }
         .admit-card-page, .instructions-page {
-            /* Adjusted padding to better fit A4 */
             padding: 12mm; 
             box-sizing: border-box; position: relative; background-color: white; z-index: 1;
-            height: 297mm; /* Ensure it takes full A4 height */
+            height: 297mm; display: flex; flex-direction: column;
         }
-        .admit-card-page { border: 1.5px solid var(--primary-blue); display: flex; flex-direction: column; }
+        .admit-card-page { border: 1.5px solid var(--primary-blue); }
         
         .admit-card-page::before {
             content: ''; position: absolute; top: 50%; left: 50%; z-index: -1;
@@ -77,66 +77,61 @@
         }
         .admit-header {
             display: flex; align-items: center; gap: 20px; 
-            /* Adjusted spacing */
             padding-bottom: 10px;
             border-bottom: 2px solid var(--border-color); 
             margin-bottom: 15px;
         }
-        .logo-admit { width: 90px; height: 90px; flex-shrink: 0; }
+        .logo-admit { width: 80px; height: 80px; flex-shrink: 0; }
         .header-text { text-align: left; }
         .header-text h1 {
-            font-family: 'Montserrat', sans-serif; margin: 0; font-size: 26px;
+            font-family: 'Montserrat', sans-serif; margin: 0; font-size: 24px;
             font-weight: 800; color: #00008B;
         }
         .header-text p { margin: 4px 0 0 0; line-height: 1.4;}
-        .header-text .sub-line1 { color: grey; font-size: 13px; }
-        .header-text .sub-line2 { color: #006400; font-size: 18px; font-weight: 700; }
-        .header-text .sub-line3 { color: #8B0000; font-size: 16px; font-weight: 500; }
+        .header-text .sub-line1 { color: grey; font-size: 12px; }
+        .header-text .sub-line2 { color: #006400; font-size: 16px; font-weight: 700; }
+        .header-text .sub-line3 { color: #8B0000; font-size: 15px; font-weight: 500; }
         .student-info-container { display: flex; gap: 20px; flex-wrap: wrap;}
         .student-details-grid { flex: 2; display: flex; flex-wrap: wrap; min-width: 300px;}
         .detail-item { 
             width: 50%; 
-            /* Adjusted padding */
             padding: 6px 0; 
-            font-size: 15px; 
+            font-size: 14px; 
         }
-        .detail-item strong { color: var(--primary-blue); width: 120px; display: inline-block; font-weight: 500;}
+        .detail-item strong { color: var(--primary-blue); width: 110px; display: inline-block; font-weight: 500;}
         .student-data { font-weight: 700; color: #000000; }
-        .student-data.highlight { font-size: 18px; }
+        .student-data.highlight { font-size: 16px; }
         .photo-area { text-align: center; flex-shrink: 0; flex: 1; min-width: 150px; }
         .photo-box {
-            width: 125px; height: 155px; border: 2px solid var(--border-color);
+            width: 120px; height: 150px; border: 2px solid var(--border-color);
             display: flex; justify-content: center; align-items: center; color: #9e9e9e;
             padding: 4px; margin: 0 auto; background-color: #fff; border-radius: 4px;
         }
         .photo-box img { width: 100%; height: 100%; object-fit: cover; border-radius: 2px; }
-        #qrcode { margin-top: 10px; padding: 5px; background: white; display: inline-block; border: 1px solid var(--border-color); border-radius: 4px;}
+        #qrcode { margin-top: 8px; padding: 4px; background: white; display: inline-block; border: 1px solid var(--border-color); border-radius: 4px;}
         .exam-schedule { 
-            /* Adjusted margin */
             margin-top: 20px; 
             flex-grow: 1; 
         }
         table { width: 100%; border-collapse: collapse; }
         table th, table td { 
             border: 1px solid var(--border-color); 
-            /* Adjusted padding */
             padding: 8px; 
-            font-size: 14px; text-align: left; 
+            font-size: 13px; text-align: left; 
         }
         table th { background-color: var(--primary-blue); color: white; font-weight: 600; font-family: 'Montserrat', sans-serif; text-align: center; }
         table tbody tr:nth-child(even) { background-color: var(--bg-light); }
         .signature-box { height: 35px; min-width: 120px; margin: auto; }
         .admit-footer { 
             display: flex; justify-content: space-between; align-items: flex-end; 
-            /* Adjusted spacing */
             padding-top: 15px; 
-            margin-top: 20px; 
+            margin-top: auto; 
             border-top: 1px solid var(--border-color); 
         }
-        .signature-area { text-align: center; font-size: 15px; color: var(--text-color); font-weight: 500; width: 220px; }
+        .signature-area { text-align: center; font-size: 14px; color: var(--text-color); font-weight: 500; width: 220px; }
         .signature-area .signature-image { height: 45px; margin-bottom: -5px; object-fit: contain; }
         .signature-line { border-top: 1px solid var(--text-color); padding-top: 5px; font-family: 'Montserrat', sans-serif; font-weight: 600; }
-        .download-info-container { display: none; width: 100%; max-width: 210mm; text-align: center; margin-top: 10px; font-size: 12px; color: #343a40; }
+        .download-info-container { width: 100%; text-align: center; margin-top: 15px; font-size: 10px; color: #555; }
         .instructions-page h3 { text-align: center; color: var(--primary-blue); font-size: 20px; font-family: 'Montserrat', sans-serif; margin-bottom: 15px; }
         .instructions-page ol { line-height: 1.8; font-size: 14px; color: var(--danger-red); list-style-type: decimal; padding-left: 20px; text-align: justify;}
         .instructions-page li { margin-bottom: 8px; font-weight: 500; }
@@ -147,14 +142,28 @@
         #downloadButton { background: linear-gradient(45deg, #28a745, #218838); }
         #printButton { background: linear-gradient(45deg, var(--secondary-blue), var(--primary-blue)); }
         
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            body { padding: 10px; }
+            .login-box { padding: 25px 20px; }
+            .admit-header { flex-direction: column; text-align: center; gap: 10px; }
+            .student-info-container { flex-direction: column; }
+            .detail-item { width: 100%; }
+            .photo-area { order: -1; margin-bottom: 15px; }
+            .page-container { width: 100%; height: auto; }
+            .admit-card-page, .instructions-page { height: auto; padding: 15px; }
+            #downloadButton, #printButton { min-width: 100%; }
+        }
+
         @media print {
             body { margin: 0; padding: 0; background: #fff; }
-            .login-container, .action-buttons, .download-info-container { display: none !important; }
+            .login-container, .action-buttons { display: none !important; }
             .page-container { display: block !important; box-shadow: none !important; border: none !important; margin: 0 !important; width: 100% !important; height: auto !important; }
             .admit-card-page { border: 1px solid #000 !important; }
-            .admit-card-page, .instructions-page { height: 297mm !important; } /* A4 height for print */
+            .admit-card-page, .instructions-page { height: 297mm !important; }
             .admit-card-page::before { opacity: 0.12 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
             table th { background-color: var(--primary-blue) !important; color: white !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .download-info-container { display: block !important; }
         }
     </style>
 </head>
@@ -184,10 +193,6 @@
         <div id="admitCardContent"></div>
     </div>
     
-    <div class="download-info-container" id="downloadInfoContainer">
-        Generated on: <span id="downloadDateTime"></span> | IP Address: <span id="userIP"></span>
-    </div>
-
     <div class="action-buttons" id="actionButtons">
         <button id="downloadButton">Download as PDF</button>
         <button id="printButton">Print Admit Card</button>
@@ -206,7 +211,6 @@
             const errorMessage = document.getElementById('errorMessage');
             const admitCardContainer = document.getElementById('admitCardContainer');
             const actionButtons = document.getElementById('actionButtons');
-            const downloadInfoContainer = document.getElementById('downloadInfoContainer');
             
             let cachedStaticImages = { logo: null, principalSign: null };
 
@@ -275,8 +279,7 @@
                             populateAdmitCard(student); 
                             loginWrapper.style.display = 'none';
                             admitCardContainer.style.display = 'block';
-                            actionButtons.style.display = 'flex';
-                            downloadInfoContainer.style.display = 'block';
+                            actionButtons.style.display = 'flex'; // This line makes the buttons visible
                             document.body.style.background = '#e9ecef';
                         } else {
                             showError('Invalid credentials. Please check details.');
@@ -304,7 +307,19 @@
                         scheduleRows += `<tr><td>${formatDate(data[`Date ${i}`])}</td><td>${data[`Paper ${i}`]}</td><td style="text-align:center;"><div class="signature-box"></div></td><td style="text-align:center;"><div class="signature-box"></div></td></tr>`;
                     }
                 }
-                
+
+                const now = new Date();
+                const dateTime = now.toLocaleString('en-GB');
+                let ipAddress = 'N/A';
+
+                const downloadInfoHTML = `<div class="download-info-container">Generated on: ${dateTime} | IP Address: <span class="userIP">${ipAddress}</span></div>`;
+
+                fetch('https://api.ipify.org?format=json')
+                    .then(r => r.json())
+                    .then(d => {
+                        document.querySelectorAll('.userIP').forEach(el => el.textContent = d.ip);
+                    });
+
                 const admitCardHTML = `
                     <div class="admit-card-page">
                         <header class="admit-header">
@@ -349,6 +364,7 @@
                                 <div class="signature-line">Principal's Signature</div>
                             </div>
                         </footer>
+                        ${downloadInfoHTML}
                     </div>`;
                 const instructionsHTML = `
                     <div class="instructions-page print-page-break">
@@ -363,17 +379,14 @@
                            <li>The admit card must display a clear photograph, student’s signature, and QR code. Admit cards without these will not be accepted.</li>
                            <li>Students must verify all details carefully before printing the admit card. In case of any errors, immediately inform the school administration.</li>
                         </ol>
+                        ${downloadInfoHTML}
                     </div>`;
 
                 admitCardContentDiv.innerHTML = admitCardHTML + instructionsHTML;
                 
-                const now = new Date();
-                document.getElementById('downloadDateTime').textContent = now.toLocaleString('en-GB');
-                fetch('https://api.ipify.org?format=json').then(r => r.json()).then(d => document.getElementById('userIP').textContent = d.ip).catch(() => document.getElementById('userIP').textContent = 'N/A');
-                
                 new QRCode(document.getElementById('qrcode'), {
                     text: `ID: ${data['STUDENT ID']}, Name: ${data["STUDENT'S NAME"]}, Class: ${data['CLASS']}`,
-                    width: 100, height: 100, colorDark : "#0A2240", colorLight : "#ffffff", correctLevel : QRCode.CorrectLevel.H
+                    width: 90, height: 90, colorDark : "#0A2240", colorLight : "#ffffff", correctLevel : QRCode.CorrectLevel.H
                 });
             }
 
